@@ -11,7 +11,7 @@ import {
   extractTraceparentData,
   isString,
   logger,
-  parseAndFreezeBaggageIfNecessary,
+  parseBaggageSetMutability,
 } from '@sentry/utils';
 import * as domain from 'domain';
 import * as http from 'http';
@@ -38,7 +38,7 @@ export function tracingHandler(): (
       req.headers && isString(req.headers['sentry-trace']) && extractTraceparentData(req.headers['sentry-trace']);
     const rawBaggageString = req.headers && isString(req.headers.baggage) && req.headers.baggage;
 
-    const baggage = parseAndFreezeBaggageIfNecessary(rawBaggageString, traceparentData);
+    const baggage = parseBaggageSetMutability(rawBaggageString, traceparentData);
 
     const transaction = startTransaction(
       {
