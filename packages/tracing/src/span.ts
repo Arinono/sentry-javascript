@@ -4,7 +4,6 @@ import { Baggage, Hub, Primitive, Span as SpanInterface, SpanContext, Transactio
 import {
   createBaggage,
   dropUndefinedKeys,
-  isBaggageEmpty,
   isBaggageMutable,
   isSentryBaggageEmpty,
   setBaggageImmutable,
@@ -312,7 +311,7 @@ export class Span implements SpanInterface {
   /**
    * @inheritdoc
    */
-  public getBaggage(): Baggage | undefined {
+  public getBaggage(): Baggage {
     const existingBaggage = this.transaction && this.transaction.metadata.baggage;
 
     // Only add Sentry baggage items to baggage, if baggage does not exist yet or it is still
@@ -322,7 +321,7 @@ export class Span implements SpanInterface {
         ? this._getBaggageWithSentryValues(existingBaggage)
         : existingBaggage;
 
-    return isBaggageEmpty(finalBaggage) ? undefined : finalBaggage;
+    return finalBaggage;
   }
 
   /**
